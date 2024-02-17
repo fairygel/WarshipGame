@@ -1,64 +1,68 @@
 package me.fairygel.field;
 
+import me.fairygel.players.Player;
+
 public class Field {
     // variables
     private final char[][] cells = new char[16][16]; // O - ship, X - eliminated, # - cant place/missed, . - empty
     private int shipsRemaining;
-    private String playerName;
 
-    public Field() {
+
+    private final Player player;
+
+    public Field(Player player) {
+        this.player = player;
         generateField();
     }
 
+    public Player getPlayer() {
+        return player;
+    }
     public int getShipsRemaining() {
         return shipsRemaining;
     }
 
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
-    }
-
     // prints
-    public void printField() {
-        System.out.print("   ");
+    public String getField() {
+        StringBuilder result = new StringBuilder();
+        result.append("   ");
         for (int i = 0; i < 16; i++) {
-            System.out.print((char) ('a' + i) + " ");
+            result.append((char) ('a' + i)).append(" ");
         }
-        System.out.println();
+        result.append("%n");
         for (int i = 0; i < 16; i++) {
-            if (i < 9) System.out.print(" ");
-            System.out.print((i + 1) + " ");
+            if (i < 9) result.append(" ");
+            result.append((i + 1)).append(" ");
             for (int j = 0; j < 16; j++)
-                System.out.print(cells[i][j] + " ");
-            System.out.println();
+                result.append(cells[i][j]).append(" ");
+            result.append("%n");
         }
+        return result.toString();
     }
 
-    public void printFieldWithoutShips() {
+    public String getFieldWithoutShips() {
+        StringBuilder result = new StringBuilder();
         // prints characters from a to p
-        System.out.print("   ");
+        result.append("   ");
         for (int i = 0; i < 16; i++) {
-            System.out.print((char) ('a' + i) + " ");
+            result.append((char) ('a' + i)).append(" ");
         }
-        System.out.println();
+        result.append("%n");
         for (int i = 0; i < 16; i++) {
             //prints numbers at left side
-            if (i < 9) System.out.print(" ");
-            System.out.print((i + 1) + " ");
+            if (i < 9) result.append(" ");
+            result.append((i + 1)).append(" ");
             //prints field
             for (int j = 0; j < 16; j++) {
                 if (cells[i][j] == 'O') {
-                    System.out.print(". ");
+                    result.append(". ");
                     continue;
                 }
-                System.out.print(cells[i][j] + " ");
+                result.append(cells[i][j]).append(" ");
             }
-            System.out.println();
+            result.append("%n");
         }
+        return result.toString();
     }
 
     // stuff to place ships
@@ -67,11 +71,11 @@ public class Field {
         for (int i = 6; i >= 1; i--) {
             for (int j = 6; j >= i; j--) {
                 //coordinates are x, y, choice(1 or 0) 1 - vertical, 0 - horizontal
-                System.out.printf("you are placing ship with size: %s (%s remaining)%n", i, j - i + 1);
-                Coordinates coordinates = Coordinates.getCoordinates(true);
+                player.displayInfo("you are placing ship with size: %s (%s remaining)%n", i, j - i + 1);
+                Coordinates coordinates = new Coordinates(player.getChar(), player.getInt(), player.getDirection());
                 while (!canPlaceShipOn(coordinates, i)) {
-                    System.out.println("Error on placement.");
-                    coordinates = Coordinates.getCoordinates(true);
+                    player.displayInfo("Error on placement.%n");
+                    coordinates = new Coordinates(player.getChar(), player.getInt(), player.getDirection());
                 }
                 int x = coordinates.getX();
                 int y = coordinates.getY();
@@ -80,7 +84,7 @@ public class Field {
                 placeShip(x, y, choice, i);
                 //add ship
                 shipsRemaining++;
-                printField();
+                player.displayInfo(getField());
             }
         }
         removeUnusedChars();

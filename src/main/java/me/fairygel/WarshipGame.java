@@ -3,110 +3,116 @@ package me.fairygel;
 import me.fairygel.field.Coordinates;
 import me.fairygel.field.Field;
 import me.fairygel.field.StateOfAttack;
-
-import java.util.Scanner;
+import me.fairygel.players.Bot;
+import me.fairygel.players.Player;
+import me.fairygel.players.Server;
 
 public class WarshipGame {
-    private static final Scanner scanner = new Scanner(System.in);
     private Field playerField;
     private Field enemyField;
+    private final Player player;
+    private Player enemy;
 
-    public void initialize() {
-        playerField = createField();
-        placeShips(playerField);
-
-        enemyField = createField();
-        placeShips(enemyField);
+    public WarshipGame() {
+        player = new Server();
     }
 
-    private Field createField() {
-        System.out.print("Enter your name: ");
-        String playerName = scanner.next();
-        System.out.printf("You are %s. Place your ships: %n", playerName);
-        Field field = new Field();
-        field.setPlayerName(playerName);
-        return field;
+    public void initialize() {
+        System.out.println("Welcome to Warship Game!");
+        System.out.print("To start, enter your name: ");
+        player.setName(player.getString());
+        System.out.println("Your name: " + player.getName());
+        System.out.print("Do you like to play with Player or with Bot? (p/b): ");
+        char choice = player.getString().charAt(0);
+        while (choice != 'p' && choice != 'b') {
+            System.out.println("If you want to play with Player, type p, if with bot - b. ");
+            System.out.print("Do you like to play with Player or with Bot? (p/b): ");
+            choice = player.getString().charAt(0);
+        }
+        if (choice == 'b') enemy = new Bot();
+        else {
+            //TODO
+        }
+        playerField = new Field(player);
+        placeShips(playerField);
     }
 
     public void start() {
         for (int i = 0; i < 20; i++) {
             System.out.println();
         }
-        System.out.println("Battle begins!");
+        print("Battle begins!%n");
         // if someone doesn't have ships, so, why we should play? main cycle
         while (playerField.getShipsRemaining() > 0 || enemyField.getShipsRemaining() > 0) {
-            System.out.printf("%s move:", playerField.getPlayerName());
+            String move = "%s move:%n";
+            print(move, player.getName());
             startTurn(enemyField, playerField);
             if (enemyField.getShipsRemaining() < 1) break;
-            System.out.printf("%s move:", enemyField.getPlayerName());
+            print(move, enemy.getName());
             startTurn(playerField, enemyField);
         }
-        System.out.println("Game Over!");
+        print("Game Over!%n");
         displayResult();
     }
 
     private void displayResult() {
-        if (enemyField.getShipsRemaining() < 1) System.out.printf("%s wins!%n", playerField.getPlayerName());
-        else System.out.printf("%s wins!%n", enemyField.getPlayerName());
-    }
-
-    private void startTurn(Field whoIsAttacked, Field attacking) {
-        if (getChoice() == 'v') {
-            displayField(whoIsAttacked, attacking);
+        if (enemyField.getShipsRemaining() < 1) {
+            player.displayInfo("You win!%n");
+            enemy.displayInfo("You lose!%n");
         } else {
-            attack(whoIsAttacked, attacking);
+            enemy.displayInfo("You win!%n");
+            player.displayInfo("You lose!%n");
         }
     }
 
-    private void displayField(Field whoIsAttacked, Field attacking) {
-        System.out.println("your field");
-        attacking.printField();
-        startTurn(whoIsAttacked, attacking);
+    private void startTurn(Field whoIsAttacked, Field attacking) {
+        displayField(attacking);
+        attack(whoIsAttacked, attacking);
+    }
+
+    private void displayField(Field attacking) {
+        Player attackingPlayer = attacking.getPlayer();
+        attackingPlayer.displayInfo("Your field:%n");
+        attackingPlayer.displayInfo(attacking.getField());
     }
 
     private void attack(Field whoIsAttacked, Field attacking) {
-        System.out.println("enemy field:");
-        whoIsAttacked.printFieldWithoutShips();
+        Player attackingPlayer = attacking.getPlayer();
+        attackingPlayer.displayInfo("Enemy field:%n");
+        attackingPlayer.displayInfo(whoIsAttacked.getFieldWithoutShips());
         // get coordinates. if error while attacking, you should enter coordinates again.
-        Coordinates coordinates = Coordinates.getCoordinates(false);
+        attackingPlayer.displayInfo("Enter Coordinates of attack:%n");
+        Coordinates coordinates = new Coordinates(attackingPlayer.getChar(), attackingPlayer.getInt());
         StateOfAttack state;
         while (true) {
             state = whoIsAttacked.beAttacked(coordinates.getX(), coordinates.getY());
             if (state.isHaveError()) {
-                System.out.println("you typed not valid coordinates.");
-                coordinates = Coordinates.getCoordinates(false);
+                attackingPlayer.displayInfo("you typed not valid coordinates.%n");
+                attackingPlayer.displayInfo("Enter Coordinates of attack:%n");
+                coordinates = new Coordinates(attackingPlayer.getChar(), attackingPlayer.getInt());
             } else break;
         }
         // if was hitted, start turn again
         if (state.isHitted()) {
-            System.out.println("you hitted!");
-            whoIsAttacked.printFieldWithoutShips();
+            attackingPlayer.displayInfo("you hitted on enemy ship!");
+            attackingPlayer.displayInfo(whoIsAttacked.getFieldWithoutShips());
             startTurn(whoIsAttacked, attacking);
         } else {
-            System.out.println("missed.");
+            attackingPlayer.displayInfo("missed.");
         }
-    }
-
-    private char getChoice() {
-        System.out.println("Attack or view your field?(a/v)");
-        char choice = scanner.next().charAt(0);
-        while (choice != 'a' && choice != 'v') {
-            System.out.println("Use v, if you want to see your field, a - to attack enemy.");
-            choice = scanner.next().charAt(0);
-        }
-        return choice;
     }
 
     private void placeShips(Field field) {
-        System.out.println("start placing your ships: ");
-        field.printField();
+        Player fieldPlayer = field.getPlayer();
+        fieldPlayer.displayInfo("start placing your ships:%n");
+        fieldPlayer.displayInfo(field.getField());
         field.placeShips();
-        System.out.println("your final field:");
-        field.printField();
-        System.out.print("press any character to continue: ");
-        scanner.next();
-        for (int i = 0; i < 20; i++) {
-            System.out.println();
-        }
+        fieldPlayer.displayInfo("your final field:");
+        fieldPlayer.displayInfo(field.getField());
+    }
+
+    private void print(String str, Object... args) {
+        player.displayInfo(str, args);
+        enemy.displayInfo(str, args);
     }
 }
