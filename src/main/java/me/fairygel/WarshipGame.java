@@ -35,6 +35,8 @@ public class WarshipGame {
         }
         playerField = new Field(player);
         placeShips(playerField);
+        enemyField = new Field(enemy);
+        placeShips(enemyField);
     }
 
     public void start() {
