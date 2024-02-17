@@ -1,5 +1,6 @@
 package me.fairygel.field;
 
+import me.fairygel.players.Bot;
 import me.fairygel.players.Player;
 
 public class Field {
@@ -81,21 +82,27 @@ public class Field {
     }
 
     // stuff to place ships
-    public void placeShips() {
+    public void placeShips(boolean isAuto) {
         //cycle, i of which equals 6, 5 5, 4 4 4 ...(or size of our ship )
         for (int i = 6; i >= 1; i--) {
             for (int j = 6; j >= i; j--) {
                 //coordinates are x, y, choice(1 or 0) 1 - vertical, 0 - horizontal
                 player.displayInfo("you are placing ship with size: %s (%s remaining)%n", i, j - i + 1);
                 Coordinates coordinates;
-                if (i == 1)
+                if (isAuto || player instanceof Bot) {
+                    Bot bot = new Bot();
+                    coordinates = new Coordinates(bot.getChar(), bot.getInt(), bot.getDirection());
+                } else if (i == 1)
                     coordinates = new Coordinates(player.getChar(), player.getInt(), 'v');
                 else
                     coordinates = new Coordinates(player.getChar(), player.getInt(), player.getDirection());
                 while (!canPlaceShipOn(coordinates, i)) {
                     clearScreen();
                     player.displayInfo("Error on placement.%n");
-                    if (i == 1)
+                    if (isAuto || player instanceof Bot) {
+                        Bot bot = new Bot();
+                        coordinates = new Coordinates(bot.getChar(), bot.getInt(), bot.getDirection());
+                    } else if (i == 1)
                         coordinates = new Coordinates(player.getChar(), player.getInt(), 'v');
                     else
                         coordinates = new Coordinates(player.getChar(), player.getInt(), player.getDirection());

@@ -118,10 +118,20 @@ public class WarshipGame {
 
     private void placeShips(Field field) {
         clearScreen();
+        boolean isAuto = true;
         Player fieldPlayer = field.getPlayer();
+        fieldPlayer.displayInfo("you want to place ships Manually or Automatically?(m/a) ");
+        String choice = fieldPlayer.getString().toLowerCase();
+        while (!(fieldPlayer instanceof Bot) && !choice.isEmpty() && choice.charAt(0) != 'm' && choice.charAt(0) != 'a') {
+            fieldPlayer.displayInfo("type m to place ships Manually or a to Automatically.%n");
+            fieldPlayer.displayInfo("you want to place ships Manually or Automatically? ");
+            choice = fieldPlayer.getString().toLowerCase();
+        }
+        if (choice.charAt(0) == 'm') isAuto = false;
         fieldPlayer.displayInfo("start placing your ships, %s:%n", fieldPlayer.getName());
         fieldPlayer.displayInfo(field.getField());
-        field.placeShips();
+
+        field.placeShips(isAuto);
         fieldPlayer.displayInfo("your final field:%n");
         fieldPlayer.displayInfo(field.getField());
         fieldPlayer.displayInfo("Enter anything to continue: ");
