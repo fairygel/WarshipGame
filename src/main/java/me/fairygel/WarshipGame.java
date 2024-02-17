@@ -40,9 +40,6 @@ public class WarshipGame {
     }
 
     public void start() {
-        for (int i = 0; i < 20; i++) {
-            System.out.println();
-        }
         print("Battle begins!%n");
         // if someone doesn't have ships, so, why we should play? main cycle
         while (playerField.getShipsRemaining() > 0 || enemyField.getShipsRemaining() > 0) {
@@ -68,20 +65,13 @@ public class WarshipGame {
     }
 
     private void startTurn(Field whoIsAttacked, Field attacking) {
-        displayField(attacking);
         attack(whoIsAttacked, attacking);
-    }
-
-    private void displayField(Field attacking) {
-        Player attackingPlayer = attacking.getPlayer();
-        attackingPlayer.displayInfo("Your field:%n");
-        attackingPlayer.displayInfo(attacking.getField());
     }
 
     private void attack(Field whoIsAttacked, Field attacking) {
         Player attackingPlayer = attacking.getPlayer();
         attackingPlayer.displayInfo("Enemy field:%n");
-        attackingPlayer.displayInfo(whoIsAttacked.getFieldWithoutShips());
+        attackingPlayer.displayInfo(attacking.getBattleField(whoIsAttacked));
         // get coordinates. if error while attacking, you should enter coordinates again.
         attackingPlayer.displayInfo("Enter Coordinates of attack:%n");
         Coordinates coordinates = new Coordinates(attackingPlayer.getChar(), attackingPlayer.getInt());
@@ -97,10 +87,10 @@ public class WarshipGame {
         // if was hitted, start turn again
         if (state.isHitted()) {
             attackingPlayer.displayInfo("you hitted on enemy ship!");
-            attackingPlayer.displayInfo(whoIsAttacked.getFieldWithoutShips());
+            attackingPlayer.displayInfo(attacking.getBattleField(whoIsAttacked));
             startTurn(whoIsAttacked, attacking);
         } else {
-            attackingPlayer.displayInfo("missed.");
+            attackingPlayer.displayInfo("missed.%n");
         }
     }
 

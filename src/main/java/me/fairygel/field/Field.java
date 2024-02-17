@@ -6,8 +6,6 @@ public class Field {
     // variables
     private final char[][] cells = new char[16][16]; // O - ship, X - eliminated, # - cant place/missed, . - empty
     private int shipsRemaining;
-
-
     private final Player player;
 
     public Field(Player player) {
@@ -22,6 +20,9 @@ public class Field {
         return shipsRemaining;
     }
 
+    public char getCharAt(int x, int y) {
+        return cells[y][x];
+    }
     // prints
     public String getField() {
         StringBuilder result = new StringBuilder();
@@ -40,25 +41,39 @@ public class Field {
         return result.toString();
     }
 
-    public String getFieldWithoutShips() {
+    public String getBattleField(Field enemyField) { //that displays your and enemy field
         StringBuilder result = new StringBuilder();
         // prints characters from a to p
+        result.append("            Your Field:                              Enemy Field:%n");
+        result.append("   ");
+        for (int i = 0; i < 16; i++) {
+            result.append((char) ('a' + i)).append(" ");
+        }
+        result.append("   |   ");
         result.append("   ");
         for (int i = 0; i < 16; i++) {
             result.append((char) ('a' + i)).append(" ");
         }
         result.append("%n");
         for (int i = 0; i < 16; i++) {
+            //player field
             //prints numbers at left side
             if (i < 9) result.append(" ");
             result.append((i + 1)).append(" ");
             //prints field
             for (int j = 0; j < 16; j++) {
-                if (cells[i][j] == 'O') {
+                result.append(cells[i][j]).append(" ");
+            }
+            result.append("   |   ");
+            //enemy field
+            if (i < 9) result.append(" ");
+            result.append((i + 1)).append(" ");
+            for (int j = 0; j < 16; j++) {
+                if (enemyField.getCharAt(j, i) == 'O') {
                     result.append(". ");
                     continue;
                 }
-                result.append(cells[i][j]).append(" ");
+                result.append(enemyField.getCharAt(j, i)).append(" ");
             }
             result.append("%n");
         }

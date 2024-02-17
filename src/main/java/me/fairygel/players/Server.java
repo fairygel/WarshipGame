@@ -36,7 +36,7 @@ public class Server implements Player {
                     input = reader.readLine();
                     userInput = Integer.parseInt(input);
                 }
-                return userInput - 1;
+                return userInput;
             } catch (NumberFormatException | IOException e) {
                 System.out.println("Invalid input. Please enter a valid integer.");
             }

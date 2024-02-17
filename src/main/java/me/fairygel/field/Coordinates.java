@@ -6,13 +6,13 @@ public class Coordinates {
     private int direction;
 
     public Coordinates(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.x = x - 'a';
+        this.y = y - 1;
     }
 
     public Coordinates(int x, int y, char direction) {
         this.x = x - 'a';
-        this.y = y;
+        this.y = y - 1;
         this.direction = direction == 'v' ? 1 : 0;
     }
 
