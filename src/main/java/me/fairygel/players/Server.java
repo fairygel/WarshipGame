@@ -56,13 +56,13 @@ public class Server implements Player {
     public char getDirection() {
         try {
             System.out.print("Vertical or Horizontal(v/h)? ");
-            char direction = reader.readLine().charAt(0);
-            while (direction != 'v' && direction != 'h') {
+            String direction = reader.readLine().toLowerCase();
+            while (!direction.isEmpty() && direction.charAt(0) != 'v' && direction.charAt(0) != 'h') {
                 System.out.println("To place ship Vertically, type v or h for Horizontal.");
                 System.out.print("Vertical or Horizontal(v/h)? ");
-                direction = reader.readLine().charAt(0);
+                direction = reader.readLine();
             }
-            return direction;
+            return direction.charAt(0);
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }
@@ -72,13 +72,13 @@ public class Server implements Player {
     public char getChar() {
         try {
             System.out.print("Enter X(a-p): ");
-            char character = reader.readLine().toLowerCase().charAt(0);
-            while (character < 'a' || character > 'p') {
+            String character = reader.readLine().toLowerCase();
+            while (!character.isEmpty() && character.charAt(0) < 'a' || character.charAt(0) > 'p') {
                 System.out.println("Y must be between a and p.");
                 System.out.print("Enter X(a-p): ");
-                character = reader.readLine().toLowerCase().charAt(0);
+                character = reader.readLine().toLowerCase();
             }
-            return character;
+            return character.charAt(0);
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }

@@ -20,16 +20,21 @@ public class WarshipGame {
     public void initialize() {
         System.out.println("Welcome to Warship Game!");
         System.out.print("To start, enter your name: ");
-        player.setName(player.getString());
+        String name = player.getString();
+        while (name.length() < 4 || name.length() > 20) {
+            System.out.println("Name length must be between 3 and 20 characters.");
+            System.out.print("Enter your name: ");
+            name = player.getString();
+        }
         System.out.println("Your name: " + player.getName());
         System.out.print("Do you like to play with Player or with Bot? (p/b): ");
-        char choice = player.getString().charAt(0);
-        while (choice != 'p' && choice != 'b') {
+        String choice = player.getString();
+        while (!choice.isEmpty() && choice.charAt(0) != 'p' && choice.charAt(0) != 'b') {
             System.out.println("If you want to play with Player, type p, if with bot - b. ");
             System.out.print("Do you like to play with Player or with Bot? (p/b): ");
-            choice = player.getString().charAt(0);
+            choice = player.getString();
         }
-        if (choice == 'b') enemy = new Bot();
+        if (choice.charAt(0) == 'b') enemy = new Bot();
         else {
             //TODO
         }
