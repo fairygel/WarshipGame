@@ -1,11 +1,30 @@
-Title: Console-Based Warship Game for Local Multiplayer
+**Console-Based Warship Game for Local Multiplayer**
 
-Description:
+## Description:
 The Console-Based Warship Game for Local Multiplayer is a project that brings the classic warship battle experience to the command line interface, allowing friends to engage in strategic naval warfare in a minimalist environment. This project focuses on simplicity, fostering a nostalgic atmosphere reminiscent of traditional board games while leveraging the convenience of modern technology.
 
-Key Features:
+## How to build(idk why you need this):
+clone the repository:
+```
+git clone https://github.com/fairygel/WarshipGame
+cd WarshipGame
+```
+build jar file with maven:
+```
+mvn package
+cp target/WarshipGame-1.0-SNAPSHOT.jar WarshipGame.jar
+```
+run file:
+```
+java -jar WarshipGame.jar
+```
 
-1. **Local Multiplayer:** The game is designed exclusively for local multiplayer gameplay, allowing friends to play against each other on the same console. This feature promotes a social and interactive gaming experience.
+
+## Key Features:
+
+1. **Local Multiplayer:** The game is designed for local multiplayer gameplay, allowing friends to play against each other on the same console. This feature promotes a social and interactive gaming experience.
+
+2. **Bot opponent:** Don't have friends? not a problem! You may also play this game with bot(yeah, it is not so kind, but he can play!).
 
 2. **Command Line Interface (CLI):** The user interface is based on the console, providing a text-based interaction for players. This minimalist approach adds a retro charm to the game and ensures accessibility across various systems.
 
