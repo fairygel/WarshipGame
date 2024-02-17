@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+// useless now
 public class Client extends Server {
     private final Socket socket;
     private final PrintWriter output;

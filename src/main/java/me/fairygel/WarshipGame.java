@@ -20,12 +20,13 @@ public class WarshipGame {
     public void initialize() {
         System.out.println("Welcome to Warship Game!");
         System.out.print("To start, enter your name: ");
-        String name = player.getString();
-        while (name.length() < 4 || name.length() > 20) {
+        String playerName = player.getString();
+        while (playerName.length() < 3 || playerName.length() > 20) {
             System.out.println("Name length must be between 3 and 20 characters.");
             System.out.print("Enter your name: ");
-            name = player.getString();
+            playerName = player.getString();
         }
+        player.setName(playerName);
         System.out.println("Your name: " + player.getName());
         System.out.print("Do you like to play with Player or with Bot? (p/b): ");
         String choice = player.getString();
@@ -36,7 +37,16 @@ public class WarshipGame {
         }
         if (choice.charAt(0) == 'b') enemy = new Bot();
         else {
-            //TODO
+            enemy = new Server();
+            System.out.print("Enter your name, second player: ");
+            String enemyName = player.getString();
+            while (enemyName.length() < 3 || enemyName.length() > 20) {
+                System.out.println("Name length must be between 3 and 20 characters.");
+                System.out.print("Enter your name: ");
+                enemyName = player.getString();
+            }
+            enemy.setName(enemyName);
+            System.out.println("Your name: " + enemy.getName());
         }
         playerField = new Field(player);
         placeShips(playerField);
@@ -75,7 +85,6 @@ public class WarshipGame {
 
     private void attack(Field whoIsAttacked, Field attacking) {
         Player attackingPlayer = attacking.getPlayer();
-        attackingPlayer.displayInfo("Enemy field:%n");
         attackingPlayer.displayInfo(attacking.getBattleField(whoIsAttacked));
         // get coordinates. if error while attacking, you should enter coordinates again.
         attackingPlayer.displayInfo("Enter Coordinates of attack:%n");
@@ -95,21 +104,32 @@ public class WarshipGame {
             attackingPlayer.displayInfo(attacking.getBattleField(whoIsAttacked));
             startTurn(whoIsAttacked, attacking);
         } else {
-            attackingPlayer.displayInfo("missed.%n");
+            if (enemy instanceof Server) {
+                for (int i = 0; i < 20; i++) {
+                    print("%n");
+                }
+                print("You missed. Show screen to another player. If you is another player, send any character to continue: ");
+                attacking.getPlayer().getString();
+            }
         }
     }
 
     private void placeShips(Field field) {
         Player fieldPlayer = field.getPlayer();
-        fieldPlayer.displayInfo("start placing your ships:%n");
+        fieldPlayer.displayInfo("start placing your ships, %s:%n", fieldPlayer.getName());
         fieldPlayer.displayInfo(field.getField());
         field.placeShips();
-        fieldPlayer.displayInfo("your final field:");
+        fieldPlayer.displayInfo("your final field:%n");
         fieldPlayer.displayInfo(field.getField());
+        fieldPlayer.displayInfo("Enter anything to continue: ");
+        fieldPlayer.getString();
+        for (int i = 0; i < 20; i++) {
+            fieldPlayer.displayInfo("%n");
+        }
     }
 
     private void print(String str, Object... args) {
         player.displayInfo(str, args);
-        enemy.displayInfo(str, args);
+        if (!(enemy instanceof Server)) enemy.displayInfo(str, args);
     }
 }
