@@ -93,6 +93,7 @@ public class Field {
                 else
                     coordinates = new Coordinates(player.getChar(), player.getInt(), player.getDirection());
                 while (!canPlaceShipOn(coordinates, i)) {
+                    clearScreen();
                     player.displayInfo("Error on placement.%n");
                     if (i == 1)
                         coordinates = new Coordinates(player.getChar(), player.getInt(), 'v');
@@ -106,6 +107,7 @@ public class Field {
                 placeShip(x, y, choice, i);
                 //add ship
                 shipsRemaining++;
+                clearScreen();
                 player.displayInfo(getField());
             }
         }
@@ -243,4 +245,8 @@ public class Field {
         return neighbors;
     }
 
+    private void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
 }

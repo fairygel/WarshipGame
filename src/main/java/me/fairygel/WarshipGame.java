@@ -55,15 +55,18 @@ public class WarshipGame {
     }
 
     public void start() {
+        clearScreen();
         print("Battle begins!%n");
         // if someone doesn't have ships, so, why we should play? main cycle
         while (playerField.getShipsRemaining() > 0 || enemyField.getShipsRemaining() > 0) {
             String move = "%s move:%n";
             print(move, player.getName());
             startTurn(enemyField, playerField);
+            clearScreen();
             if (enemyField.getShipsRemaining() < 1) break;
             print(move, enemy.getName());
             startTurn(playerField, enemyField);
+            clearScreen();
         }
         print("Game Over!%n");
         displayResult();
@@ -100,14 +103,13 @@ public class WarshipGame {
         }
         // if was hitted, start turn again
         if (state.isHitted()) {
+            clearScreen();
             attackingPlayer.displayInfo("you hitted on enemy ship!");
             attackingPlayer.displayInfo(attacking.getBattleField(whoIsAttacked));
             startTurn(whoIsAttacked, attacking);
         } else {
             if (enemy instanceof Server) {
-                for (int i = 0; i < 20; i++) {
-                    print("%n");
-                }
+                clearScreen();
                 print("You missed. Show screen to another player. If you is another player, send any character to continue: ");
                 attacking.getPlayer().getString();
             }
@@ -115,6 +117,7 @@ public class WarshipGame {
     }
 
     private void placeShips(Field field) {
+        clearScreen();
         Player fieldPlayer = field.getPlayer();
         fieldPlayer.displayInfo("start placing your ships, %s:%n", fieldPlayer.getName());
         fieldPlayer.displayInfo(field.getField());
@@ -123,13 +126,16 @@ public class WarshipGame {
         fieldPlayer.displayInfo(field.getField());
         fieldPlayer.displayInfo("Enter anything to continue: ");
         fieldPlayer.getString();
-        for (int i = 0; i < 20; i++) {
-            fieldPlayer.displayInfo("%n");
-        }
+        clearScreen();
     }
 
     private void print(String str, Object... args) {
         player.displayInfo(str, args);
         if (!(enemy instanceof Server)) enemy.displayInfo(str, args);
+    }
+
+    private void clearScreen() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 }
