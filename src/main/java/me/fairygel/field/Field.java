@@ -87,10 +87,17 @@ public class Field {
             for (int j = 6; j >= i; j--) {
                 //coordinates are x, y, choice(1 or 0) 1 - vertical, 0 - horizontal
                 player.displayInfo("you are placing ship with size: %s (%s remaining)%n", i, j - i + 1);
-                Coordinates coordinates = new Coordinates(player.getChar(), player.getInt(), player.getDirection());
+                Coordinates coordinates;
+                if (i == 1)
+                    coordinates = new Coordinates(player.getChar(), player.getInt(), 'v');
+                else
+                    coordinates = new Coordinates(player.getChar(), player.getInt(), player.getDirection());
                 while (!canPlaceShipOn(coordinates, i)) {
                     player.displayInfo("Error on placement.%n");
-                    coordinates = new Coordinates(player.getChar(), player.getInt(), player.getDirection());
+                    if (i == 1)
+                        coordinates = new Coordinates(player.getChar(), player.getInt(), 'v');
+                    else
+                        coordinates = new Coordinates(player.getChar(), player.getInt(), player.getDirection());
                 }
                 int x = coordinates.getX();
                 int y = coordinates.getY();
